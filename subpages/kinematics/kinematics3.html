@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<title>Kinematics Equation 3 Calculator</title>
+<html class = "Kinematics Equation 3 Calculator" lang = "en-US"></html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Kinematics Equation 3</h1>
+    <p>
+        Input the given values and the unknowns will be solved.
+        <br>
+        <select name="page" id="page" onchange="window.location.href=(this.value)" style="font-size:18px;">
+            <option value="kinematics3.html" selected="selected">Current Equation</option>
+            <option value="kinematics1.html">v&#8339; = v&#8339;&#8320; + a&#8339;t</option>
+            <option value="kinematics2.html">x = x&#8320; + v&#8339;&#8320;t + &#189;at&#178;</option>
+        </select>
+    </p>
+    <hr>
+    <img src="../../images/Kinematics/Kinematics_Equation_3.png">
+    <table style="width:150px; border-collapse: collapse; table-layout: fixed;">
+        <tr>
+            <td style="width:45px;"><img src="../../images/Kinematics/vx.png"></td>
+            <td style="width:50px;"><input type="text" id="vx" name="vx" style="width:45px;"></td>  
+            <td style="width:45px;"><select name="units_vx" id="units_vx" style="width: 60px;">
+                <option value="mps">m/s</option>
+             </select></td>
+        </tr>
+        <tr>
+            <td style="width:45px;"><img src="../../images/Kinematics/vx0.png"></td>
+            <td style="width:50px;"><input type="text" id="vx0" name="vx0" style="width:45px;"></td>  
+            <td style="width:45px;"><select name="units_vx0" id="units_vx0" style="width: 60px;">
+                <option value="mps">m/s</option>
+             </select></td>
+        </tr>
+        <tr>
+            <td style="width:45px;"><img src="../../images/Kinematics/ax.png"></td>
+            <td style="width:50px;"><input type="text" id="ax" name="ax" style="width:45px;"></td>
+            <td style="width:45px;"><select name="units_ax" id="units_ax" style="width: 60px;">
+                <option value="mps">m/s&#178;</option>
+             </select></td>
+        </tr>
+        <tr>
+            <td style="width:45px;"><img src="../../images/Kinematics/x.png"></td>
+            <td style="width:50px;"><input type="text" id="x" name="x" style="width:45px;"></td>
+            <td style="width:45px;"><select name="units_x" id="units_x" style="width: 60px;">
+               <option value="m">m</option>
+            </select></td>  
+        </tr>
+        <tr>
+            <td style="width:45px;"><img src="../../images/Kinematics/x0.png"></td>
+            <td style="width:50px;"><input type="text" id="x0" name="x0" style="width:45px;"></td>
+            <td style="width:45px;"><select name="units_x0" id="units_x0" style="width: 60px;">
+                <option value="m">m</option>
+             </select></td> 
+        </tr>
+    </table>
+    <input name="action_btn_calc" class="action_btn_calc" type="submit" value="Calculate" onclick="calculate()"></input>
+    <input name="action_btn_reset" class="action_btn_reset" type="submit" value="Reset" onclick="resetVals()"></input>
+    <hr>
+    <button onclick = "window.location.href='../../index.html'">Go Back</button>
+    <script src="common.js" id="common"></script>
+    <script>
+        var element = [];
+        var units = [];
+
+        element[0] = document.getElementById("vx");
+        units[0] = document.getElementById("units_vx");
+        element[1] = document.getElementById("vx0");
+        units[1] = document.getElementById("units_vx0");
+        element[2] = document.getElementById("ax");
+        units[2] = document.getElementById("units_ax");
+        element[3] = document.getElementById("x");
+        units[3] = document.getElementById("units_x");
+        element[4] = document.getElementById("x0");
+        units[4] = document.getElementById("units_x0");
+
+        var empty = [];
+        const mult = [];
+
+        function calculate(){
+            if (!areNums(element)){
+                alert("Error: Inputs must be numeric!");
+                return;
+            }
+            empty = areEmpty(element);
+            if (!validBlanks(empty[0] + empty[1] + empty[2] + empty[3] + empty[4])){
+                return;
+            }
+            check_units();
+            solve();
+            resetSelections(units, empty);
+        };
+
+        function resetVals(){
+            reset(element);
+            resetSelections(units, false);
+        };
+
+        function check_units(){
+            mult[0] = check_v_units(units[0]);
+            mult[1] = check_v_units(units[1]);
+            mult[2] = check_a_units(units[2]);
+            mult[3] = check_x_units(units[3]);
+            mult[4] = check_x_units(units[4]);
+        };
+
+        function solve(){
+            if(empty[0]){
+                solve_vx();
+            } else if (empty[1]){
+                solve_vx0();
+            } else if (empty[2]){
+                solve_ax();
+            } else if (empty[3]){
+                solve_x();
+            } else{
+                solve_x0();
+            }
+        };
+
+        function solve_vx(){
+            element = handle_units(element, mult, 0);
+            element[0].value = Math.sqrt((+element[1].value * +element[1].value) + (2 * +element[2].value * (+element[3].value - +element[4].value))) / mult[0];
+        };
+
+        function solve_vx0(){
+            element = handle_units(element, mult, 1);
+
+            element[1].value = Math.sqrt((element[0].value * element[0].value) - (2 * element[2].value * (+element[3].value - +element[4].value))) / mult[1];
+        };
+
+        function solve_ax(){
+            element = handle_units(element, mult, 2);
+
+            element[2].value = (((element[0].value * element[0].value) - (element[1].value * element[1].value)) / (2 * (element[3].value - element[4].value))) / mult[2];
+        };
+
+        function solve_x(){
+            element = handle_units(element, mult, 3);
+
+            element[3].value = ((((element[0].value * element[0].value) - (element[1].value * element[1].value)) / (2 * element[2].value)) + +element[4].value) / mult[3];
+        };
+
+        function solve_x0(){
+            element = handle_units(element, mult, 4);
+
+            element[4].value = (+element[3].value - (((element[0].value * element[0].value) - (element[1].value * element[1].value)) / (2*element[2].value))) / mult[4];
+        };
+
+    </script>
+</body>
+</html>
